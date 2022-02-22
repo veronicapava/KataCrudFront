@@ -6,10 +6,50 @@ const initialState = {
 }
 const Store = createContext(initialState)
 
+const Form = () => {
+
+  const formRef = useRef(null)
+  const { dispatch } = useContext(Store)
+  const [state, setState] = useState({})
+
+  const onAdd = (event) => {
+    event.preventDefault();
+    const request = {
+      name: state.name,
+      id: null,
+      isComplete: false
+    }
+
+    fetch(HOST_API + "api/todos", {
+      method: 'POST',
+      body: JSON.stringify(request),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then((todo) => {
+        dispatch({ type: "add-item", item: todo });
+        setState({ name: "" });
+        formRef.current.reset();
+      })
+  }
+
+  return (
+    <div>
+      <form ref={formRef}>
+        <input type="text" name="name" onChange={(event) => {
+          setState({ ...state, name: event.target.value })
+        }}></input>
+        <button onClick={onAdd}>Agregar</button>
+      </form>
+    </div>
+  )
+}
+
 
 const List = () => {
-  const { dispatch } = useContext(Store)
-  const [state, setState] = useState()
+  const { dispatch, state } = useContext(Store)
 
   useEffect(() => {
     fetch(HOST_API + "/todos")
@@ -18,6 +58,7 @@ const List = () => {
         dispatch({ type: "update-list", list })
       })
   }, [state.list.length, dispatch]);
+
   return (
     <div>
       <table>
@@ -42,7 +83,7 @@ const List = () => {
   )
 }
 
-function reducer(state, action) {
+function reducer(state, action) { //
   switch (action.type) {
     case 'update-list': return { ...state, list: action.list }
     case 'add-item': const newList = state.list;
@@ -52,14 +93,13 @@ function reducer(state, action) {
   }
 }
 
-const StoreProvider = ({ children }) => {
+const StoreProvider = ({ children }) => { //Nos conecta diferentes componentes
   const [state, dispatch] = useReducer(reducer, initialState)
 
   return <Store.Provider value={{ state, dispatch }}>
     {children}
   </Store.Provider>
 }
-
 
 function App() {
   return (
