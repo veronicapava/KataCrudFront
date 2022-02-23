@@ -60,15 +60,15 @@ const Form = () => {
       })
   }
 
-  return (
-    <form ref={formRef}>
-      <input type="text" name="name" defaultValue={item.name} onChange={(event) => {
-        setState({ ...state, name: event.target.value })
+  return ( //Formulario para añadir cada tarea
+    <form ref={formRef} className="mt-5 text-center">
+      <h1>To-Do List</h1>
+      <h4>Agrega/edita una tarea a realizar:</h4>
+      <input className="mt-3 mb-5 col-sm-4" type="text" name="name" defaultValue={item.name} onChange={(event) => {
+        setState({ ...state, name: event.target.value.toUpperCase() }) //Valor del input se transforma a mayusculas
       }}></input>
-
-      {item.id && <button onClick={onEdit}>Editar</button>}
-      {!item.id && <button onClick={onAdd}>Agregar</button>}
-
+      {item.id && <button className="btn btn-secondary" onClick={onEdit}>Editar</button>}
+      {!item.id && <button className="btn btn-secondary" onClick={onAdd}>Agregar</button>}
     </form>
   )
 }
@@ -102,11 +102,11 @@ const List = () => {
 
   return (
     <div>
-      <table>
+      <table className="table table-hover text-center">
         <thead>
           <tr>
             <td>ID</td>
-            <td>Nombre</td>
+            <td>Actividad a realizar</td>
             <td>¿Está completado?</td>
           </tr>
         </thead>
@@ -116,8 +116,8 @@ const List = () => {
               <td>{todo.id}</td>
               <td>{todo.name}</td>
               <td>{todo.isCompleted === true ? "SI" : "NO"}</td>
-              <td><button onClick={() => onDelete(todo.id)}>Eliminar</button></td>
-              <td><button onClick={() => onEdit(todo)}>Editar</button></td>
+              <td><button className="btn btn-secondary" onClick={() => onEdit(todo)}>Editar</button></td>
+              <td><button className="btn btn-danger" onClick={() => onDelete(todo.id)}>Eliminar</button></td>
             </tr>
           })}
         </tbody>
