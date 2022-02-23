@@ -87,7 +87,7 @@ const List = () => { //Funcion para crear una lista con todos los items
 
 
   const onDelete = (id) => {
-    fetch(HOST_API + "/" + id + "/todo", {
+    fetch(HOST_API + "/todo" + "/" + id, {
       method: "DELETE"
     })
       .then((list) => {
