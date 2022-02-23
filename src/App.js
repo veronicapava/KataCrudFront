@@ -9,6 +9,7 @@ const Store = createContext(initialState)
 const Form = () => {
 
   const formRef = useRef(null)
+
   const { dispatch } = useContext(Store)
   const [state, setState] = useState({})
 
@@ -20,7 +21,7 @@ const Form = () => {
       isComplete: false
     }
 
-    fetch(HOST_API + "api/todos", {
+    fetch(HOST_API + "/todo", {
       method: 'POST',
       body: JSON.stringify(request),
       headers: {
@@ -36,14 +37,12 @@ const Form = () => {
   }
 
   return (
-    <div>
-      <form ref={formRef}>
-        <input type="text" name="name" onChange={(event) => {
-          setState({ ...state, name: event.target.value })
-        }}></input>
-        <button onClick={onAdd}>Agregar</button>
-      </form>
-    </div>
+    <form ref={formRef}>
+      <input type="text" name="name" onChange={(event) => {
+        setState({ ...state, name: event.target.value })
+      }}></input>
+      <button onClick={onAdd}>Agregar</button>
+    </form>
   )
 }
 
@@ -70,11 +69,11 @@ const List = () => {
           </tr>
         </thead>
         <tbody>
-          {state.lis.map((todo) => {
+          {state.list.map((todo) => {
             return <tr key={todo.id}>
               <td>{todo.id}</td>
               <td>{todo.name}</td>
-              <td>{todo.isComplete}</td>
+              <td>{todo.isCompleted}</td>
             </tr>
           })}
         </tbody>
@@ -83,7 +82,7 @@ const List = () => {
   )
 }
 
-function reducer(state, action) { //
+function reducer(state, action) {
   switch (action.type) {
     case 'update-list': return { ...state, list: action.list }
     case 'add-item': const newList = state.list;
