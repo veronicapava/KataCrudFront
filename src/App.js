@@ -1,19 +1,19 @@
 import React, { useContext, useReducer, useEffect, useState, createContext, useRef } from 'react'
 
-const HOST_API = 'http://localhost:8080/api'
+const HOST_API = 'http://localhost:8080/api'//Conexion a la api hecha con springboot
 const initialState = {
   list: [],
   item: {}
 }
 const Store = createContext(initialState)
 
-const Form = () => {
+const Form = () => { //Funcion para el formulario
 
   const formRef = useRef(null)
   const { dispatch, state: { item } } = useContext(Store)
   const [state, setState] = useState({ item })
 
-  const onAdd = (event) => {
+  const onAdd = (event) => { //Evento para agregar una nueva tarea
     event.preventDefault();
 
     const request = {
@@ -37,7 +37,7 @@ const Form = () => {
       })
   }
 
-  const onEdit = (event) => {
+  const onEdit = (event) => { //Evento para editar una tarea
     event.preventDefault();
     const request = {
       name: state.name,
@@ -74,10 +74,10 @@ const Form = () => {
 }
 
 
-const List = () => {
+const List = () => { //Funcion para crear una lista con todos los items
   const { dispatch, state } = useContext(Store)
 
-  useEffect(() => {
+  useEffect(() => { //Consumimos la informacion que nos trae la api
     fetch(HOST_API + "/todos")
       .then(response => response.json())
       .then((list) => {
@@ -100,7 +100,7 @@ const List = () => {
   }
 
 
-  return (
+  return ( //Crea tabla donde se refleja cada tarea
     <div>
       <table className="table table-hover text-center">
         <thead>
@@ -126,7 +126,7 @@ const List = () => {
   )
 }
 
-function reducer(state, action) {
+function reducer(state, action) { //Actualiza el estado tomando a eleccion el estado actual y el nuevo estado
   switch (action.type) {
     case 'update-item': const listUpdateEdit = state.list.map((item) => {
       if (item.id === action.item.id) {
@@ -156,7 +156,7 @@ const StoreProvider = ({ children }) => { //Nos conecta diferentes componentes
   </Store.Provider>
 }
 
-function App() {
+function App() { //Funcion principal
   return (
     <StoreProvider>
       <Form />
