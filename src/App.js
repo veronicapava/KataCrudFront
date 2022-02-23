@@ -58,6 +58,21 @@ const List = () => {
       })
   }, [state.list.length, dispatch]);
 
+
+  const onDelete = (id) => {
+    fetch(HOST_API + "/" + id + "/todo", {
+      method: "DELETE"
+    })
+      .then((list) => {
+        dispatch({ type: "delete-item", id })
+      })
+  }
+
+
+
+
+
+
   return (
     <div>
       <table>
@@ -74,6 +89,8 @@ const List = () => {
               <td>{todo.id}</td>
               <td>{todo.name}</td>
               <td>{todo.isCompleted}</td>
+              <td><button onClick={() => onDelete(todo.id)}>Eliminar</button></td>
+              <td><button onClick={() => onEdit(todo)}>Editar</button></td>
             </tr>
           })}
         </tbody>
@@ -84,7 +101,12 @@ const List = () => {
 
 function reducer(state, action) {
   switch (action.type) {
+    case 'delete-item': const listUpdate = state.filter((item) => {
+      return item.id !== action.id;
+    });
+      return { ...state, list: listUpdate }
     case 'update-list': return { ...state, list: action.list }
+    case 'edit-item': return { ...state, item: action.item }
     case 'add-item': const newList = state.list;
       newList.push(action.item);
       return { ...state, list: newList }
